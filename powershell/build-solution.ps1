@@ -14,37 +14,45 @@
     ) 
 {
 
-    "Cleaning solution' $solutionPath'..."
+    try
+    {
+
+        "Cleaning solution' $solutionPath'..."
      
-    $MSBuild = $env:systemroot + "\Microsoft.NET\Framework\$frameworkVersion\MSBuild.exe";
+        $MSBuild = $env:systemroot + "\Microsoft.NET\Framework\$frameworkVersion\MSBuild.exe";
          
                             
-    $args = @{            
-        FilePath = $MSBuild            
-        ArgumentList = $solutionPath, "/t:clean", ("/p:Configuration=Release"), "/v:minimal"            
-        RedirectStandardOutput = $logFilePath            
-        Wait = $true            
-        WindowStyle = "Hidden"            
-    }            
+        $args = @{            
+            FilePath = $MSBuild            
+            ArgumentList = $solutionPath, "/t:clean", ("/p:Configuration=Release"), "/v:minimal"            
+            RedirectStandardOutput = $logFilePath            
+            Wait = $true            
+            WindowStyle = "Hidden"            
+        }            
                     
-    #Clean the solution before building
-    Start-Process @args #| Out-String -stream -width 1024 > $logFilePath    
+        #Clean the solution before building
+        Start-Process @args #| Out-String -stream -width 1024 > $logFilePath    
 
-    "Finished cleaning solution' $solutionPath'..."
+        "Finished cleaning solution' $solutionPath'..."
 
-    "Building solution' $solutionPath'..."
+        "Building solution' $solutionPath'..."
 
-    $args = @{            
-        FilePath = $MSBuild            
-        ArgumentList = $solutionPath, "/t:build", ("/p:Configuration=Release"), "/v:minimal"            
-        RedirectStandardOutput = $logFilePath            
-        Wait = $true            
-        WindowStyle = "Hidden"            
-    }            
+        $args = @{            
+            FilePath = $MSBuild            
+            ArgumentList = $solutionPath, "/t:build", ("/p:Configuration=Release"), "/v:minimal"            
+            RedirectStandardOutput = $logFilePath            
+            Wait = $true            
+            WindowStyle = "Hidden"            
+        }            
                     
-    #Build the solution
-    Start-Process @args #| Out-String -stream -width 1024 > $logFilePath   
+        #Build the solution
+        Start-Process @args #| Out-String -stream -width 1024 > $logFilePath   
     
-    "Finished building solution' $solutionPath'..." 
+        "Finished building solution' $solutionPath'..." 
+    }
+    catch
+    {
+        "Unexpected error while building solution' $solutionPath'..."
+    }
 }
 
